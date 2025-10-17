@@ -33,15 +33,15 @@ async function translateText(text, sourceLang, targetLang) {
 
     // Trả về object với text đã dịch và ngôn ngữ nguồn (nếu auto-detect)
     const response = {
-      translatedText: result.TranslatedText
+      translatedText: result.TranslatedText,
     };
-    
+
     // Nếu dùng auto-detect, thêm thông tin ngôn ngữ đã phát hiện
-    if (sourceLang === 'auto' && result.SourceLanguageCode) {
+    if (sourceLang === "auto" && result.SourceLanguageCode) {
       response.detectedLanguage = result.SourceLanguageCode;
       console.log(`🔍 Phát hiện ngôn ngữ nguồn: ${result.SourceLanguageCode}`);
     }
-    
+
     return response;
   } catch (error) {
     console.error("❌ Lỗi khi gọi AWS Translate:", error);

@@ -165,7 +165,7 @@ async function translateText() {
       // Hiển thị kết quả dịch
       document.getElementById("translatedText").textContent =
         data.translatedText;
-      
+
       // Nếu dùng auto-detect, hiển thị ngôn ngữ đã nhận diện được
       if (sourceLang === "auto" && data.detectedLanguage) {
         const langInfo = document.createElement("div");
@@ -173,12 +173,12 @@ async function translateText() {
         langInfo.style.color = "#8b4513";
         langInfo.style.fontWeight = "bold";
         langInfo.innerHTML = `🔍 Ngôn ngữ phát hiện: ${data.detectedLanguage}`;
-        
+
         const resultBox = document.getElementById("textResult");
         const translatedDiv = document.getElementById("translatedText");
         translatedDiv.parentNode.insertBefore(langInfo, translatedDiv);
       }
-      
+
       document.getElementById("textResult").style.display = "block";
     } else {
       showError(data.error || "Có lỗi xảy ra khi dịch văn bản");
@@ -240,11 +240,11 @@ async function translateImage() {
         // Hiện kết quả text gốc
         document.getElementById("originalText").textContent =
           data.originalText || "(Không có text)";
-        
+
         // Hiện kết quả dịch
         document.getElementById("translatedImageText").textContent =
           data.translatedText || "(Không có bản dịch)";
-        
+
         // Nếu dùng auto-detect, hiển thị ngôn ngữ đã nhận diện
         const imageResultDiv = document.getElementById("imageResult");
         if (sourceLang === "auto" && data.detectedLanguage) {
@@ -253,11 +253,11 @@ async function translateImage() {
           langInfo.style.color = "#8b4513";
           langInfo.style.fontWeight = "bold";
           langInfo.innerHTML = `🔍 Ngôn ngữ phát hiện: ${data.detectedLanguage}`;
-          
+
           const translatedDiv = document.getElementById("translatedImageText");
           translatedDiv.parentNode.insertBefore(langInfo, translatedDiv);
         }
-        
+
         imageResultDiv.style.display = "block";
       }
     } else {

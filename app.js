@@ -90,7 +90,7 @@ app.post("/translate-image", upload.single("image"), async (req, res) => {
     res.json({
       originalText: detectedText,
       translatedText: result.translatedText,
-      detectedLanguage: result.detectedLanguage
+      detectedLanguage: result.detectedLanguage,
     });
   } catch (error) {
     console.error("Lỗi khi xử lý ảnh:", error);
