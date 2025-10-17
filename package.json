@@ -7,7 +7,11 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": ["aws", "translate", "rekognition"],
+  "keywords": [
+    "aws",
+    "translate",
+    "rekognition"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
