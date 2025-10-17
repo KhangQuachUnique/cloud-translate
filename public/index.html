@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Translate & Rekognition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 AWS Translate & Rekognition</h1>
+        <p class="subtitle">Dịch văn bản hoặc nhận diện text trong ảnh</p>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('text')">📝 Dịch văn bản</button>
+            <button class="tab-btn" onclick="showTab('image')">🖼️ Dịch ảnh</button>
+        </div>
+
+        <!-- Tab 1: Dịch văn bản -->
+        <div id="text-tab" class="tab-content active">
+            <div class="form-group">
+                <label>Văn bản cần dịch:</label>
+                <textarea id="textInput" rows="5" placeholder="Nhập văn bản cần dịch..."></textarea>
+            </div>
+
+            <div class="language-selector">
+                <div class="form-group">
+                    <label>Từ ngôn ngữ:</label>
+                    <select id="sourceLang">
+                        <option value="en">English</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="ja">日本語 (Japanese)</option>
+                        <option value="ko">한국어 (Korean)</option>
+                        <option value="zh">中文 (Chinese)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="th">ไทย (Thai)</option>
+                        <option value="id">Indonesia</option>
+                    </select>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="form-group">
+                    <label>Sang ngôn ngữ:</label>
+                    <select id="targetLang">
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="en">English</option>
+                        <option value="ja">日本語 (Japanese)</option>
+                        <option value="ko">한국어 (Korean)</option>
+                        <option value="zh">中文 (Chinese)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="th">ไทย (Thai)</option>
+                        <option value="id">Indonesia</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="translateText()" class="btn btn-primary">🔄 Dịch ngay</button>
+
+            <div id="textResult" class="result-box" style="display: none;">
+                <h3>✅ Kết quả dịch:</h3>
+                <div id="translatedText"></div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Dịch ảnh -->
+        <div id="image-tab" class="tab-content">
+            <div class="form-group">
+                <label>Chọn ảnh có chứa văn bản:</label>
+                <input type="file" id="imageInput" accept="image/*" onchange="previewImage()">
+            </div>
+
+            <div id="imagePreview" class="image-preview" style="display: none;">
+                <img id="previewImg" src="" alt="Preview">
+            </div>
+
+            <div class="language-selector">
+                <div class="form-group">
+                    <label>Từ ngôn ngữ:</label>
+                    <select id="imageSourceLang">
+                        <option value="en">English</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="ja">日本語 (Japanese)</option>
+                        <option value="ko">한국어 (Korean)</option>
+                        <option value="zh">中文 (Chinese)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="th">ไทย (Thai)</option>
+                        <option value="id">Indonesia</option>
+                    </select>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="form-group">
+                    <label>Sang ngôn ngữ:</label>
+                    <select id="imageTargetLang">
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="en">English</option>
+                        <option value="ja">日本語 (Japanese)</option>
+                        <option value="ko">한국어 (Korean)</option>
+                        <option value="zh">中文 (Chinese)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="th">ไทย (Thai)</option>
+                        <option value="id">Indonesia</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="translateImage()" class="btn btn-primary">🔍 Nhận diện & Dịch</button>
+
+            <div id="imageResult" class="result-box" style="display: none;">
+                <h3>📄 Text gốc phát hiện được:</h3>
+                <div id="originalText" class="original-text"></div>
+                
+                <h3>✅ Bản dịch:</h3>
+                <div id="translatedImageText"></div>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Đang xử lý...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

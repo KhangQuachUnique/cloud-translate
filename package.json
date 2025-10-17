@@ -1,13 +1,23 @@
 {
   "name": "aws-translate",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Simple AWS Translate & Rekognition API",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
-  "keywords": [],
+  "keywords": ["aws", "translate", "rekognition"],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "aws-sdk": "^2.1498.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
