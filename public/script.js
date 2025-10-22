@@ -23,6 +23,9 @@ function showTab(tabName) {
   hideResults();
 }
 
+// Biến global để lưu danh sách ngôn ngữ
+let languagesMap = {};
+
 // Hàm load danh sách ngôn ngữ từ AWS
 async function loadLanguages() {
   try {
@@ -32,6 +35,12 @@ async function loadLanguages() {
 
     if (data.languages) {
       console.log(`✅ Đã tải ${data.languages.length} ngôn ngữ`);
+
+      // Lưu vào map để tra cứu sau: { "en": "English", "vi": "Vietnamese", ... }
+      languagesMap = {};
+      data.languages.forEach((lang) => {
+        languagesMap[lang.code] = lang.name;
+      });
 
       // Populate tất cả các select boxes
       const selects = [
@@ -49,7 +58,7 @@ async function loadLanguages() {
         if (index === 0 || index === 2) {
           const autoOption = document.createElement("option");
           autoOption.value = "auto";
-          autoOption.textContent = "🔍 Tự động nhận diện";
+          autoOption.textContent = "Tự động nhận diện";
           select.appendChild(autoOption);
         }
 
@@ -95,7 +104,7 @@ function hideLoading() {
 // Hiển thị lỗi
 function showError(message) {
   const errorDiv = document.getElementById("errorMessage");
-  errorDiv.textContent = "❌ Lỗi: " + message;
+  errorDiv.textContent = "Lỗi: " + message;
   errorDiv.style.display = "block";
   hideLoading();
 }
@@ -162,21 +171,23 @@ async function translateText() {
 
     // Xử lý kết quả
     if (response.ok) {
+      // Xóa thông tin ngôn ngữ cũ
+      const detectedLangDiv = document.getElementById("detectedLangInfo");
+      detectedLangDiv.innerHTML = "";
+
       // Hiển thị kết quả dịch
       document.getElementById("translatedText").textContent =
         data.translatedText;
 
       // Nếu dùng auto-detect, hiển thị ngôn ngữ đã nhận diện được
       if (sourceLang === "auto" && data.detectedLanguage) {
-        const langInfo = document.createElement("div");
-        langInfo.style.marginBottom = "10px";
-        langInfo.style.color = "#8b4513";
-        langInfo.style.fontWeight = "bold";
-        langInfo.innerHTML = `🔍 Ngôn ngữ phát hiện: ${data.detectedLanguage}`;
+        const langCode = data.detectedLanguage;
+        const langName = languagesMap[langCode] || langCode; // Lấy tên, fallback về code nếu không tìm thấy
 
-        const resultBox = document.getElementById("textResult");
-        const translatedDiv = document.getElementById("translatedText");
-        translatedDiv.parentNode.insertBefore(langInfo, translatedDiv);
+        detectedLangDiv.style.marginBottom = "10px";
+        detectedLangDiv.style.color = "#8b4513";
+        detectedLangDiv.style.fontWeight = "bold";
+        detectedLangDiv.textContent = `Ngôn ngữ phát hiện: ${langName} (${langCode})`;
       }
 
       document.getElementById("textResult").style.display = "block";
@@ -237,6 +248,12 @@ async function translateImage() {
         // Không phát hiện text
         showError(data.message);
       } else {
+        // Xóa thông tin ngôn ngữ cũ
+        const detectedImageLangDiv = document.getElementById(
+          "detectedImageLangInfo"
+        );
+        detectedImageLangDiv.innerHTML = "";
+
         // Hiện kết quả text gốc
         document.getElementById("originalText").textContent =
           data.originalText || "(Không có text)";
@@ -246,19 +263,17 @@ async function translateImage() {
           data.translatedText || "(Không có bản dịch)";
 
         // Nếu dùng auto-detect, hiển thị ngôn ngữ đã nhận diện
-        const imageResultDiv = document.getElementById("imageResult");
         if (sourceLang === "auto" && data.detectedLanguage) {
-          const langInfo = document.createElement("div");
-          langInfo.style.marginBottom = "10px";
-          langInfo.style.color = "#8b4513";
-          langInfo.style.fontWeight = "bold";
-          langInfo.innerHTML = `🔍 Ngôn ngữ phát hiện: ${data.detectedLanguage}`;
+          const langCode = data.detectedLanguage;
+          const langName = languagesMap[langCode] || langCode; // Lấy tên, fallback về code nếu không tìm thấy
 
-          const translatedDiv = document.getElementById("translatedImageText");
-          translatedDiv.parentNode.insertBefore(langInfo, translatedDiv);
+          detectedImageLangDiv.style.marginBottom = "10px";
+          detectedImageLangDiv.style.color = "#8b4513";
+          detectedImageLangDiv.style.fontWeight = "bold";
+          detectedImageLangDiv.textContent = `Ngôn ngữ phát hiện: ${langName} (${langCode})`;
         }
 
-        imageResultDiv.style.display = "block";
+        document.getElementById("imageResult").style.display = "block";
       }
     } else {
       showError(data.error || "Có lỗi xảy ra khi xử lý ảnh");

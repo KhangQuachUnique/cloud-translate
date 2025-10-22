@@ -8,15 +8,15 @@
   </head>
   <body>
     <div class="container">
-      <h1>🌍 AWS Translate & Rekognition</h1>
+      <h1>AWS Translate & Rekognition</h1>
       <p class="subtitle">Dịch văn bản hoặc nhận diện text trong ảnh</p>
 
       <!-- Tab Navigation -->
       <div class="tabs">
         <button class="tab-btn active" onclick="showTab('text')">
-          📝 Dịch văn bản
+          Dịch văn bản
         </button>
-        <button class="tab-btn" onclick="showTab('image')">🖼️ Dịch ảnh</button>
+        <button class="tab-btn" onclick="showTab('image')">Dịch ảnh</button>
       </div>
 
       <!-- Tab 1: Dịch văn bản -->
@@ -49,11 +49,12 @@
         </div>
 
         <button onclick="translateText()" class="btn btn-primary">
-          🔄 Dịch ngay
+          Dịch ngay
         </button>
 
         <div id="textResult" class="result-box" style="display: none">
-          <h3>✅ Kết quả dịch:</h3>
+          <h3>Kết quả dịch:</h3>
+          <div id="detectedLangInfo"></div>
           <div id="translatedText"></div>
         </div>
       </div>
@@ -93,14 +94,15 @@
         </div>
 
         <button onclick="translateImage()" class="btn btn-primary">
-          🔍 Nhận diện & Dịch
+          Nhận diện & Dịch
         </button>
 
         <div id="imageResult" class="result-box" style="display: none">
-          <h3>📄 Text gốc phát hiện được:</h3>
+          <h3>Text gốc phát hiện được:</h3>
           <div id="originalText" class="original-text"></div>
 
-          <h3>✅ Bản dịch:</h3>
+          <h3>Bản dịch:</h3>
+          <div id="detectedImageLangInfo"></div>
           <div id="translatedImageText"></div>
         </div>
       </div>

@@ -1,55 +1,60 @@
-// Service xử lý dịch văn bản bằng AWS Translate
 const AWS = require("aws-sdk");
 
-// Cấu hình AWS SDK
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION || "us-east-1",
 });
 
-// Khởi tạo AWS Translate client
 const translate = new AWS.Translate();
 
-/**
- * Hàm dịch văn bản từ ngôn ngữ này sang ngôn ngữ khác
- * @param {string} text - Văn bản cần dịch
- * @param {string} sourceLang - Mã ngôn ngữ nguồn (ví dụ: 'en', 'vi', 'auto' để tự động nhận diện)
- * @param {string} targetLang - Mã ngôn ngữ đích (ví dụ: 'vi', 'en')
- * @returns {Promise<Object>} - Object chứa translatedText và detectedLanguage (nếu dùng auto)
- */
+// Dịch văn bản
 async function translateText(text, sourceLang, targetLang) {
   try {
-    // Chuẩn bị tham số cho AWS Translate
-    const params = {
-      Text: text,
-      SourceLanguageCode: sourceLang,
-      TargetLanguageCode: targetLang,
-    };
+    const result = await translate
+      .translateText({
+        Text: text,
+        SourceLanguageCode: sourceLang,
+        TargetLanguageCode: targetLang,
+      })
+      .promise();
 
-    // Gọi API AWS Translate
-    console.log(`🔄 Đang dịch từ ${sourceLang} sang ${targetLang}...`);
-    const result = await translate.translateText(params).promise();
+    // LOG TOÀN BỘ KẾT QUẢ TRẢ VỀ TỪ AWS TRANSLATE
+    console.log("\n========== AWS TRANSLATE RESPONSE ==========");
+    console.log(JSON.stringify(result, null, 2));
+    console.log("==========================================\n");
 
-    // Trả về object với text đã dịch và ngôn ngữ nguồn (nếu auto-detect)
-    const response = {
-      translatedText: result.TranslatedText,
-    };
+    const response = { translatedText: result.TranslatedText };
 
-    // Nếu dùng auto-detect, thêm thông tin ngôn ngữ đã phát hiện
     if (sourceLang === "auto" && result.SourceLanguageCode) {
       response.detectedLanguage = result.SourceLanguageCode;
-      console.log(`🔍 Phát hiện ngôn ngữ nguồn: ${result.SourceLanguageCode}`);
     }
 
     return response;
   } catch (error) {
-    console.error("❌ Lỗi khi gọi AWS Translate:", error);
     throw new Error(`Không thể dịch văn bản: ${error.message}`);
   }
 }
 
-// Export hàm để sử dụng ở file khác
-module.exports = {
-  translateText,
-};
+// Lấy danh sách ngôn ngữ
+async function getLanguages() {
+  try {
+    const result = await translate.listLanguages().promise();
+
+    // LOG MỘT VÀI NGÔN NGỮ ĐẦU TIÊN ĐỂ XEM CẤU TRÚC
+    console.log("\n========== AWS LIST LANGUAGES RESPONSE ==========");
+    console.log("Total languages:", result.Languages.length);
+    console.log("Sample (first 3):");
+    console.log(JSON.stringify(result.Languages.slice(0, 3), null, 2));
+    console.log("================================================\n");
+
+    return result.Languages.map((lang) => ({
+      code: lang.LanguageCode,
+      name: lang.LanguageName,
+    })).sort((a, b) => a.name.localeCompare(b.name));
+  } catch (error) {
+    throw new Error(`Không thể lấy danh sách ngôn ngữ: ${error.message}`);
+  }
+}
+
+module.exports = { translateText, getLanguages };
